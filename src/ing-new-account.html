@@ -25,6 +25,7 @@
                 border-left: 1px solid #ccc;
                 padding-left: 5%;
                 box-sizing: border-box;
+                padding-bottom: 25px;
             }
 
             #newAcTitle {
@@ -53,32 +54,32 @@
             }
         </style>
         <div id="newAcSlot">
-            <div id="newAcTitle">
-                <div id="titleHolder">
-                    <h1>For </h1>
-                    <paper-dropdown-menu selected="1" name="dependents">
-                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="0">
-                            <paper-item name="jackSparrow" value="Jack Sparrow">Me (Jack Sparrow)</paper-item>
-                            <paper-item name="willSparrow" value="Will Sparrow">Will Sparrow</paper-item>
-                            <paper-item name="elizabethSparrow" value="Elizabeth Sparrow">Elizabeth Sparrow</paper-item>
-                            <paper-item name="new" value="New">Add New Person</paper-item>
-                        </paper-listbox>
-                    </paper-dropdown-menu>
-                </div>
-                <div id="serviceHolder">
-                    <h1>Products </h1>
-                    <paper-dropdown-menu name="service">
-                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="1">
-                            <paper-item value="CA">Current Account</paper-item>
-                            <paper-item value="SA">Savings Account</paper-item>
-                            <paper-item value="OB">On-boarding</paper-item>
-                        </paper-listbox>
-                    </paper-dropdown-menu>
-                </div>
-            </div>
-            <div id="newAcBody">
-                <iron-form id="newAccountForm">
-                    <form action="" method="POST">
+            <iron-form id="newAccountForm">
+                <form action="" method="POST">
+                    <div id="newAcTitle">
+                        <div id="titleHolder">
+                            <h1>For </h1>
+                            <paper-dropdown-menu selected="1" name="dependents">
+                                <paper-listbox class="dropdown-content" slot="dropdown-content" selected="0">
+                                    <paper-item name="jackSparrow" value="Jack Sparrow">Me (Jack Sparrow)</paper-item>
+                                    <paper-item name="willSparrow" value="Will Sparrow">Will Sparrow</paper-item>
+                                    <paper-item name="elizabethSparrow" value="Elizabeth Sparrow">Elizabeth Sparrow</paper-item>
+                                    <paper-item name="new" value="New">Add New Person</paper-item>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                        <div id="serviceHolder">
+                            <h1>Products </h1>
+                            <paper-dropdown-menu name="service">
+                                <paper-listbox class="dropdown-content" slot="dropdown-content" selected="1">
+                                    <paper-item value="CA">Current Account</paper-item>
+                                    <paper-item value="SA">Savings Account</paper-item>
+                                    <paper-item value="OB">On-boarding</paper-item>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                    </div>
+                    <div id="newAcBody">
                         <div id="personalDetails" class="formSection">
                             <h3>Personal Info</h3>
                             <paper-dropdown-menu label="Title" name="title">
@@ -114,13 +115,14 @@
                             <paper-input type="flie" name="personalCard" label="Personalize your bank card"></paper-input>
                         </div>
                         <br/>
-                        <paper-button id="addAccount" on-click="formSubmit" raised>Submit</paper-button>
-                    </form>
-                    <br>
-                </iron-form>
-            </div>
+                        <paper-button id="addAccount" on-click="formSubmit" raised style=" background: #f60;
+    color: #fff;">Submit</paper-button>
+                        <br/>
+                    </div>
+                </form>
+            </iron-form>
         </div>
-        <iron-ajax id="requestRegistration" method="post" content-type="application/json" url="http://10.138.65.174:8486/smart/bank/customer/registration"
+        <iron-ajax id="requestRegistration" method="post" content-type="application/json" url="http://hcl-hackathon.getsandbox.com/linkaccount"
             body='[[formData]]' on-response="handleResponse" handle-as="json" debounce-duration="300"></iron-ajax>
 
 
@@ -146,31 +148,28 @@
             }
             formSubmit() {
                 var data = this.$.newAccountForm.serializeForm();
+                console.log(data);
+
                 this.formData = JSON.stringify({
-                    "customerLoginId": data.userName,
-                    "loginPassword": data.password,
-                    "firstName": data.fName,
-                    "lastName": data.lName,
-                    "emailId": data.email,
-                    "mobileNumber": data.mobile,
-                    "nationalId": data.nationalID,
-                    "title": data.title,
-                    "address": [
-                        {
-                            "addressType": "Home",
-                            "addressLine1": data.line1,
-                            "addressLine2": data.line2,
-                            "city": data.city,
-                            "country": data.country,
-                            "postCode": data.postalCode
-                        }
-                    ],
-                    "accounts": [
-                        {
-                            "accountType": data.accountType
-                        }
-                    ]
-                });
+                    "userinfo": {
+                        "title": data.title,
+                        "firstname": data.fName,
+                        "middlename": data.lName,
+                        "accounttype": data.service,
+                        "lastname": data.lName,
+                        "shortname": data.sName,
+                        "dateofbirth": data.dob,
+                        "nationalsecurityid": data.nationalID,
+                        "mobilenumber": data.mobile,
+                        "email": "a@a.com",
+                        "userid": data.userName,
+                        "password": data.password,
+                        "supportingdocbase64": "",
+                        "personalizeflag": data.supportDoc,
+                        "personalizeddocbase64": ""
+                    }
+                }
+                );
                 console.log(this.$.requestRegistration);
                 this.$.requestRegistration.generateRequest();
             }
